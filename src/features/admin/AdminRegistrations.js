@@ -162,6 +162,37 @@ const AdminRegistrations = () => {
     return `${API_BASE_URL}${slash}${photoUrl}`;
   };
 
+  // Download Registrations PDF (A4) via fetch → Blob → anchor
+  const handleDownloadRegistrations = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/admin/export/registrations`, {
+        method: 'GET',
+        headers: { Accept: 'application/pdf' },
+      });
+      if (!response.ok) {
+        throw new Error(`Server responded ${response.status}`);
+      }
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+
+      // Create a temporary link to trigger download
+      const anchor = document.createElement('a');
+      anchor.href = url;
+      anchor.download = 'registrations.pdf';
+      document.body.appendChild(anchor);
+      anchor.click();
+
+      // Cleanup
+      anchor.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('Error downloading registrations PDF:', err);
+      setSnackSeverity('error');
+      setSnackMessage('Failed to download registrations PDF.');
+      setSnackOpen(true);
+    }
+  };
+
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
       <Typography variant="h4" gutterBottom>
@@ -247,17 +278,15 @@ const AdminRegistrations = () => {
             </Table>
           </TableContainer>
 
-          <Box sx={{ p: 2, textAlign: 'right',  }}>
+          <Box sx={{ p: 2, textAlign: 'right' }}>
             <Button
               variant="contained"
-              sx={{ backgroundColor: '#5A827E',
-    '&:hover': { backgroundColor: '#46566A'}  }}
-              onClick={() =>
-                window.open(
-                  `${API_BASE_URL}/api/admin/export/registrations`,
-                  '_blank'
-                )
-              }
+              sx={{
+                backgroundColor: '#5A827E',
+                '&:hover': { backgroundColor: '#46566A' },
+                textTransform: 'none',
+              }}
+              onClick={handleDownloadRegistrations}
             >
               Download Registrations PDF (A4)
             </Button>
@@ -269,7 +298,15 @@ const AdminRegistrations = () => {
       <Dialog open={Boolean(editingReg)} onClose={closeEditModal} fullWidth maxWidth="sm">
         <DialogTitle>Edit Registration</DialogTitle>
         <DialogContent>
-          <Box component="form" sx={{ mt: 1, display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <Box
+            component="form"
+            sx={{
+              mt: 2,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 2,
+            }}
+          >
             <TextField
               margin="dense"
               label="Name"
