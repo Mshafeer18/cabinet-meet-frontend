@@ -20,8 +20,3 @@ code {
     monospace;
 }
 
-/*--------- OVERRIDE “Cooper Black” WITH “Alfa Slab One” ---------*/
-/* Match any element whose inline style contains “Cooper Black” */
-[style*="Cooper Black"] {
-  font-family: 'Alfa Slab One', serif !important;
-}
