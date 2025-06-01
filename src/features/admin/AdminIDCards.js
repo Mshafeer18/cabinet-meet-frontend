@@ -62,7 +62,7 @@ const IDCardPreview = ({ data, footerDate }) => {
           sx={{
             fontSize: '0.4cm',
             textAlign: 'center',
-            fontFamily: '"Cooper Black", serif',
+            fontFamily: 'cooper-black-std, serif',
             textTransform: 'uppercase',
             fontWeight: 'bold',
             m: 0,

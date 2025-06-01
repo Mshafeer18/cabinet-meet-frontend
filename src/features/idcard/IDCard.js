@@ -113,7 +113,7 @@ function IDCard({ formData }) {
             >
               <span
                 style={{
-                  fontFamily: '"Cooper Black", serif',
+                  fontFamily: 'cooper-black-std, serif',
                   textTransform: 'uppercase',
                 }}
               >
